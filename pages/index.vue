@@ -8,23 +8,23 @@
           item-title="nome"
           item-value="id"
           label="Selecione um vendedor"
-        ></v-select>
+        />
         
         <v-text-field
           v-model="faturamento"
           label="Faturamento"
           type="text"
           hide-details
-        ></v-text-field>
+        />
   
-        <v-btn @click="adicionarComissao" class="mt-10 mb-5 ml-5">Calcular Comissão</v-btn>
+        <v-btn class="mt-10 mb-5 ml-5" @click="adicionarComissao">Calcular Comissão</v-btn>
         
         <v-data-table
           v-if="tableData.length > 0"
           :headers="headers"
           :items="tableData"
           class="elevation-1"
-        ></v-data-table>
+        />
       </v-card>
     </v-container>
   </v-app>
