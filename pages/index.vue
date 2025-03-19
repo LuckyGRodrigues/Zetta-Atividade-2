@@ -1,139 +1,95 @@
 <template>
-  <template>
-    <v-card style="background-color:  #fb911f;">
-      <v-tabs v-model="tab" align-tabs="center" color="red">
-        <a href="http://localhost:3000/ademiro/ademiro">
-          <v-icon class="bah">
-            mdi-account-lock
-          </v-icon>
-        </a>
-
-        <a href="http://localhost:3000/">
-          <v-tab :value="1" @click="" style="color: darkred; font-weight: bolder; 
-          font-size:larger;" class="text-none">Início</v-tab>
-        </a>  
-
-        <a href="http://localhost:3000/cupom">
-          <v-tab :value="2" @click="" style="color: darkred; font-weight: bold; 
-          font-size:large;" class="text-none">Cupons</v-tab>
-        </a>
-
-        <a href="http://localhost:3000/cardapio">
-          <v-tab :value="3" @click="" style="color: darkred; font-weight: bold;
-          font-size:large;" class="text-none">Cardápio</v-tab>
-        </a>
-
-        <a href="https://www.youtube.com/watch?v=hvL1339luv0">
-          <v-tab :value="4" @click="" style="color: darkred; font-weight: bold;
-          font-size:large;" class="text-none">AppBK</v-tab>
-        </a>
-
-        <a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ">
-          <v-tab :value="5" @click="" style="color: darkred; font-weight: bold;
-          font-size:large;" class="text-none">ClubeBK</v-tab>
-        </a>
+  <v-app>
+    <v-container>
+      <v-card class="mt-10">
+        <v-select
+          v-model="vendedorSelecionado"
+          :items="vendedores"
+          item-title="nome"
+          item-value="id"
+          label="Selecione um vendedor"
+        ></v-select>
         
-        <a href="http://localhost:3000/login">
-          <v-icon class="bah" style="position: relative; width: 50%;">
-            mdi-login
-          </v-icon>
-        </a>
-
-      </v-tabs>
-    </v-card>
-  </template>
-
-  <body>
-    <section>
-      <div class="background-section">
-        <video src="../Video/a.mp4" autoplay loop muted></video>
-      </div>
-      <div class="box">
-        <div class="conteudo">
-          <pre>
-            O AMOR PODE ACABAR
-            O BOM GOSTO NÃO!
-          </pre>
-          <img src="/imagem/burgasso.png" alt="" style="height: 75%; width: 75%;">
-        </div>
-      </div>
-    </section>
-  </body>
+        <v-text-field
+          v-model="faturamento"
+          label="Faturamento"
+          type="text"
+          hide-details
+        ></v-text-field>
+  
+        <v-btn @click="adicionarComissao" class="mt-10 mb-5 ml-5">Calcular Comissão</v-btn>
+        
+        <v-data-table
+          v-if="tableData.length > 0"
+          :headers="headers"
+          :items="tableData"
+          class="elevation-1"
+        ></v-data-table>
+      </v-card>
+    </v-container>
+  </v-app>
 </template>
 
 <script>
-  export default {
-    data: () => ({
-      tab: null,
-    }),
-  }
+
+export default {
+  data() {
+    return {
+      vendedores: [
+        { id: 1, nome: 'Anabel' },
+        { id: 2, nome: 'Julius' },
+        { id: 3, nome: 'Paulo' }
+        { id: 4, nome: 'Ana' }
+      ],
+      faixas: [
+        { min: 0.01, max: 1000.00, percentual: 5 },
+        { min: 1000.01, max: 10000.00, percentual: 10 },
+        { min: 10000.01, max: 100000.00, percentual: 20 },
+        { min: 100000.01, max: 1000000.00, percentual: 30 }
+      ],
+      headers: [
+        { title: 'Vendedor', value: 'vendedor' },
+        { title: 'Faturamento', value: 'faturamento' },
+        { title: 'Comissão', value: 'comissao' }
+      ],
+      faturamento: 0,
+      vendedorSelecionado: null,
+      tableData: [],
+    };
+  },
+
+  methods: {
+    calcularComissao(valor) {
+      for (const faixa of this.faixas) {
+        if (valor >= faixa.min && valor <= faixa.max) {
+          return (valor * faixa.percentual) / 100;
+        }
+      }
+      return 0;
+    },
+
+    adicionarComissao() {
+      const vendedor = this.vendedores.find(vendedores => vendedores.id === this.vendedorSelecionado);
+      if (vendedor && this.faturamento > 0) {
+        const comissao = this.calcularComissao(this.faturamento);
+
+        this.tableData = [{
+          vendedor: vendedor.nome,
+          faturamento: this.faturamento,
+          comissao: comissao
+        }];
+        this.resetarFormulario();
+      }
+    },
+
+    resetarFormulario() {
+      this.faturamento = 0;
+      this.vendedorSelecionado = null;
+    }
+  },
+};
 </script>
 
 <style>
-  *{
-    padding: 0;
-    margin: 0;
-    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
-    box-sizing: border-box;
-  }
 
-  body{
-    width: 100%;
-    min-height: 100vh;
-  }
-  section{
-    width: 100%;
-    height: 100vh;  
-  }
-
-  section div.background-section{
-    width: 100%;
-    height: 100%;
-    position: absolute;
-    z-index: 0;
-  }
-
-  section div.background-section video{
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: center;
-  }
-
-  section div.box{
-    width: 50%;
-    height: 100%;
-    position: relative;
-    z-index: 1;
-    background: linear-gradient(to right, blue(0,0,0,0.9), transparent);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 2%;
-  }
-
-  section div.box div.conteudo{
-    width: 80%;
-  }
-
-  section div.box img{
-    width: 100%;
-    min-width: 300px;
-  }
-
-  section div.box pre{
-    font-family: 'Times New Roman', Times, serif;
-    font-weight: bolder;
-    color: #b59143;
-    font-size: 24px;
-    max-height: 32px;
-  }
-
-  section div.box v-tab{
-    color: yellow;
-  }
-
-  .bah{
-    color:darkred
-  }
 </style>
