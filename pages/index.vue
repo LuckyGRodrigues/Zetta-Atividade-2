@@ -38,7 +38,7 @@ export default {
       vendedores: [
         { id: 1, nome: 'Anabel' },
         { id: 2, nome: 'Julius' },
-        { id: 3, nome: 'Paulo' }
+        { id: 3, nome: 'Paulo' },
         { id: 4, nome: 'Ana' }
       ],
       faixas: [
